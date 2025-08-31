@@ -1,5 +1,5 @@
 # Dev-header
-CLI tools for generating **comment header**
+CLI tool for generating **comment header**
 ## Features
 
 ## Install
