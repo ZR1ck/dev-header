@@ -11,7 +11,7 @@ pub struct Config {
 }
 
 impl Config {
-    pub fn get() -> Self {
+    pub fn new() -> Self {
         let data = fs::read_to_string("config.json").unwrap();
         serde_json::from_str::<Config>(&data).unwrap()
     }

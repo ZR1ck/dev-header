@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Template {
     pub name: String,
     pub default: bool,
@@ -13,7 +13,7 @@ pub struct Template {
     pub space_after: u8,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Border {
     pub left: Option<char>,
     pub top: Option<char>,
@@ -21,7 +21,7 @@ pub struct Border {
     pub bottom: Option<char>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Field {
     pub key: String,
     pub default_value: String,
@@ -31,7 +31,7 @@ pub struct Field {
     pub key_visible: bool,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "lowercase")]
 pub enum Alignment {
     Left,
