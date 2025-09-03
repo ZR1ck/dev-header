@@ -1,3 +1,3 @@
 fn main() {
-    println!("Hello, world!");
+    dev_header::run();
 }

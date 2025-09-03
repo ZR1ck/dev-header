@@ -1,0 +1,84 @@
+[
+    {
+        "border": {
+            "bottom": "#",
+            "left": "*",
+            "right": "*",
+            "top": "#"
+        },
+        "default": true,
+        "fields": [
+            {
+                "align": "center",
+                "default_value": "Title",
+                "key": "title",
+                "key_visible": false
+            }
+        ],
+        "length": 75,
+        "name": "centered_header",
+        "space_after": 0,
+        "space_before": 0
+    },
+    {
+        "border": null,
+        "default": false,
+        "fields": [
+            {
+                "align": "left",
+                "default_value": "file.txt",
+                "key": "File",
+                "key_visible": true
+            },
+            {
+                "align": "left",
+                "default_value": "Template file",
+                "key": "Purpose",
+                "key_visible": true
+            }
+        ],
+        "length": 75,
+        "name": "simple_line",
+        "space_after": 0,
+        "space_before": 0
+    },
+    {
+        "border": {
+            "bottom": "*",
+            "left": "*",
+            "right": null,
+            "top": "*"
+        },
+        "default": false,
+        "fields": [
+            {
+                "align": "left",
+                "default_value": "file.txt",
+                "key": "File",
+                "key_visible": true
+            },
+            {
+                "align": "left",
+                "default_value": "John Doe",
+                "key": "Author",
+                "key_visible": true
+            },
+            {
+                "align": "left",
+                "default_value": "1970-01-01",
+                "key": "Created on",
+                "key_visible": true
+            },
+            {
+                "align": "left",
+                "default_value": "Description",
+                "key": "Description",
+                "key_visible": true
+            }
+        ],
+        "length": 75,
+        "name": "block_metadata",
+        "space_after": 0,
+        "space_before": 0
+    }
+]
