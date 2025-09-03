@@ -13,6 +13,12 @@ pub struct Template {
     pub space_after: u8,
 }
 
+impl Template {
+    pub const DEFAULT_HEADER_LEN: u16 = 75;
+    pub const MAX_HEADER_LEN: u16 = 255;
+    pub const SPACE_HEIGHT: u8 = 0;
+}
+
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Border {
     pub left: Option<char>,

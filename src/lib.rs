@@ -1,24 +1,21 @@
 use crate::{
     commands::{Cli, Commands},
-    config::Config,
     core::storage::Storage,
 };
 use clap::Parser;
 use dialoguer::theme::ColorfulTheme;
 
 mod commands;
-mod config;
 mod core;
 
 pub fn run() {
     let cli = Cli::parse();
     let mut store = Storage::new();
-    let config = Config::new();
     let input_theme = ColorfulTheme::default();
 
     match cli.command {
         Commands::New => {
-            commands::new::run(&config, &mut store, &input_theme);
+            commands::new::run(&mut store, &input_theme);
         }
         Commands::List { selection } => {
             commands::list::run(selection, &store, &input_theme);
@@ -39,7 +36,6 @@ pub fn run() {
                 spacing,
                 border,
                 fields,
-                &config,
                 &mut store,
                 &input_theme,
             );

@@ -53,13 +53,15 @@ pub fn build_header(template: &Template) -> String {
     // build header body
     let mut lines: Vec<String> = vec![];
     for field in &template.fields {
-        let line = if field.key_visible {
-            build_key_value_line(field, key_len, value_len)
+        let vec_lines = if field.key_visible {
+            build_key_value_lines(field, key_len, value_len)
         } else {
             build_line(field, max_len)
         };
 
-        lines.push(line);
+        for line in vec_lines {
+            lines.push(line);
+        }
 
         // println!("|{}|", line);
         // println!("size: {}", line.len());
@@ -111,15 +113,21 @@ pub fn build_header(template: &Template) -> String {
     lines.join("\n")
 }
 
-fn build_line(field: &Field, line_len: usize) -> String {
-    match field.align {
-        Alignment::Center => format!("{:^line_len$}", field.default_value),
-        Alignment::Left => format!("{:<line_len$}", field.default_value),
+fn build_line(field: &Field, line_len: usize) -> Vec<String> {
+    let lines = wrap_text(&field.default_value, line_len);
+    let mut result = vec![];
+    for i in 0..lines.len() {
+        let line = match field.align {
+            Alignment::Center => format!("{:^line_len$}", lines[i]),
+            Alignment::Left => format!("{:<line_len$}", lines[i]),
+        };
+        result.push(line);
     }
+    result
 }
 
-pub fn build_key_value_line(field: &Field, key_len: usize, value_len: usize) -> String {
-    let mut result = String::new();
+pub fn build_key_value_lines(field: &Field, key_len: usize, value_len: usize) -> Vec<String> {
+    let mut result = vec![];
     let lines = wrap_text(&field.default_value, value_len.into());
 
     // println!("Lines wrapped: {:?}", lines);
@@ -127,21 +135,21 @@ pub fn build_key_value_line(field: &Field, key_len: usize, value_len: usize) -> 
     for i in 0..lines.len() {
         let line = {
             let key = if i == 0 {
-                field.key.clone()
+                format!(" {:<key_len$} : ", field.key.clone())
             } else {
-                format!("{}", " ".repeat(key_len))
+                format!(" {:<key_len$}   ", " ".repeat(key_len))
             };
 
             match field.align {
                 Alignment::Center => {
-                    format!(" {:^key_len$} : {:^value_len$}", key, field.default_value)
+                    format!("{}{:^value_len$}", key, lines[i])
                 }
                 Alignment::Left => {
-                    format!(" {:<key_len$} : {:<value_len$}", key, field.default_value)
+                    format!("{}{:<value_len$}", key, lines[i])
                 }
             }
         };
-        result.push_str(&line);
+        result.push(line);
     }
     result
 }
@@ -150,11 +158,41 @@ pub fn wrap_text(text: &str, line_len: usize) -> Vec<String> {
     let mut result: Vec<String> = vec![];
     let mut line = String::from("");
 
+    // println!("line_len: {line_len}");
+
     for word in text.split_whitespace() {
-        if line.len() + word.len() + 1 <= line_len {
+        // current word is longer than the remain space
+        if word.len() > (line_len - line.len()) {
+            // split to fit the remain space
+            let remain = line_len - line.len();
+            let s = &word[0..remain];
+            line.push_str(s);
+            result.push(line.clone());
+
+            // number of lines for the remaining character
+            let n = ((word.len() - remain) as f32 / line_len as f32).ceil() as usize;
+            let mut start_pos = remain;
+            let mut end_pos = std::cmp::min(start_pos + line_len, word.len());
+            let mut i = 0;
+            loop {
+                let s = &word[start_pos..end_pos];
+                line = s.to_string();
+                if i >= n - 1 {
+                    break;
+                }
+                result.push(s.to_string());
+                start_pos = end_pos;
+                end_pos = std::cmp::min(start_pos + line_len, word.len());
+                i += 1;
+            }
+        }
+        // current word is shorter
+        else if line.len() + word.len() + 1 <= line_len {
             line.push_str(word);
             line.push(' ');
-        } else {
+        }
+        // line complete
+        else {
             result.push(line);
             line = word.to_string();
         }

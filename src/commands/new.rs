@@ -1,16 +1,13 @@
 use console::style;
 use dialoguer::{Confirm, Input, theme::ColorfulTheme};
 
-use crate::{
-    config::Config,
-    core::{
-        header::border_input,
-        storage::Storage,
-        template::{Alignment, Border, Field, Template},
-    },
+use crate::core::{
+    header::border_input,
+    storage::Storage,
+    template::{Alignment, Border, Field, Template},
 };
 
-pub fn run(config: &Config, store: &mut Storage, input_theme: &ColorfulTheme) {
+pub fn run(store: &mut Storage, input_theme: &ColorfulTheme) {
     let name: String = Input::with_theme(input_theme)
         .with_prompt("Header name")
         .validate_with(|input: &String| -> Result<(), &str> {
@@ -25,14 +22,14 @@ pub fn run(config: &Config, store: &mut Storage, input_theme: &ColorfulTheme) {
 
     let length: u16 = Input::with_theme(input_theme)
         .with_prompt("Header length")
-        .default(config.header_len)
+        .default(Template::DEFAULT_HEADER_LEN)
         .validate_with(|input: &u16| -> Result<(), String> {
-            if *input > 0 && *input <= config.header_len {
+            if *input > 0 && *input <= Template::MAX_HEADER_LEN {
                 Ok(())
             } else {
                 Err(format!(
                     "Header length must greater than 0 and less than or equal to {}",
-                    config.header_len
+                    Template::MAX_HEADER_LEN
                 ))
             }
         })
@@ -41,14 +38,14 @@ pub fn run(config: &Config, store: &mut Storage, input_theme: &ColorfulTheme) {
 
     let space_before: u8 = Input::with_theme(input_theme)
                 .with_prompt("Space before")
-                .default(config.space_height)
+                .default(Template::SPACE_HEIGHT)
                 .validate_with(|input: &u8| -> Result<(), String> {
-                    if *input <= config.space_height {
+                    if *input <= Template::SPACE_HEIGHT {
                         Ok(())
                     } else {
                         Err(format!(
                             "Space before paragraph must greater than or equal to 0 and less than or equal to {}",
-                            config.space_height
+                            Template::SPACE_HEIGHT
                         ))
                     }
                 })
@@ -57,14 +54,14 @@ pub fn run(config: &Config, store: &mut Storage, input_theme: &ColorfulTheme) {
 
     let space_after: u8 = Input::with_theme(input_theme)
                 .with_prompt("Space before")
-                .default(config.space_height)
+                .default(Template::SPACE_HEIGHT)
                 .validate_with(|input: &u8| -> Result<(), String> {
-                    if *input <= config.space_height {
+                    if *input <= Template::SPACE_HEIGHT {
                         Ok(())
                     } else {
                         Err(format!(
                             "Space before paragraph must greater than or equal to 0 and less than or equal to {}",
-                            config.space_height
+                            Template::SPACE_HEIGHT
                         ))
                     }
                 })
@@ -99,6 +96,16 @@ pub fn run(config: &Config, store: &mut Storage, input_theme: &ColorfulTheme) {
     {
         let key: String = Input::with_theme(input_theme)
             .with_prompt("Key")
+            .validate_with(|input: &String| -> Result<(), String> {
+                if input.len() > (length / 2) as usize {
+                    Err(
+                        "The length of the key must be less than half of the total length"
+                            .to_string(),
+                    )
+                } else {
+                    Ok(())
+                }
+            })
             .interact()
             .unwrap();
         let value: String = Input::with_theme(input_theme)

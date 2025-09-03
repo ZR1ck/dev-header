@@ -1,13 +1,10 @@
 use console::style;
 use dialoguer::{Confirm, Input, Select, theme::ColorfulTheme};
 
-use crate::{
-    config::Config,
-    core::{
-        header::border_input,
-        storage::Storage,
-        template::{Alignment, Border},
-    },
+use crate::core::{
+    header::border_input,
+    storage::Storage,
+    template::{Alignment, Border, Template},
 };
 
 pub fn run(
@@ -16,7 +13,6 @@ pub fn run(
     spacing: bool,
     border: bool,
     fields: bool,
-    config: &Config,
     store: &mut Storage,
     input_theme: &ColorfulTheme,
 ) {
@@ -36,7 +32,7 @@ pub fn run(
                 .unwrap();
             let space = Input::with_theme(input_theme)
                 .with_prompt("New space")
-                .default(config.space_height)
+                .default(Template::SPACE_HEIGHT)
                 .interact()
                 .unwrap();
             match selection {
@@ -67,6 +63,7 @@ pub fn run(
         // edit fields
         else if fields {
             let fields = &mut template.fields;
+            let length = template.length;
             if fields.len() <= 0 {
                 println!("This header hasn't got any fields");
                 return;
@@ -103,6 +100,13 @@ pub fn run(
                             let new_key = Input::with_theme(input_theme)
                                 .with_prompt("New key")
                                 .default(field.key.clone())
+                                .validate_with(|input: &String| -> Result<(), String> {
+                                    if input.len() > (length / 2) as usize {
+                                        Err("The length of the key must be less than half of the total length".to_string())
+                                    } else {
+                                        Ok(())
+                                    }
+                                })
                                 .interact()
                                 .unwrap();
                             field.key = new_key;
