@@ -161,8 +161,8 @@ pub fn wrap_text(text: &str, line_len: usize) -> Vec<String> {
     // println!("line_len: {line_len}");
 
     for word in text.split_whitespace() {
-        // current word is longer than the remain space
-        if word.len() > (line_len - line.len()) {
+        // current word is longer than the remain space and longer than total space
+        if word.len() > (line_len - line.len()) && word.len() > line_len {
             // split to fit the remain space
             let remain = line_len - line.len();
             let s = &word[0..remain];
@@ -178,6 +178,7 @@ pub fn wrap_text(text: &str, line_len: usize) -> Vec<String> {
                 let s = &word[start_pos..end_pos];
                 line = s.to_string();
                 if i >= n - 1 {
+                    line.push(' ');
                     break;
                 }
                 result.push(s.to_string());
@@ -195,6 +196,9 @@ pub fn wrap_text(text: &str, line_len: usize) -> Vec<String> {
         else {
             result.push(line);
             line = word.to_string();
+            if line.len() < line_len {
+                line.push(' ');
+            }
         }
     }
     result.push(line);
