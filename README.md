@@ -22,7 +22,7 @@ $ header get <name>
 ```
 - Apply a header with input values:
 ```bash
-$ header apply <name> <val1> <val2> ...
+$ header apply
 ```
 For full usage and all commands, run:
 ```bash

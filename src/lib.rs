@@ -46,8 +46,8 @@ pub fn run() {
         Commands::Default { values } => {
             commands::default::run(values, &mut store);
         }
-        Commands::Apply { name, values } => {
-            commands::apply::run(name, values, &mut store);
+        Commands::Apply { name } => {
+            commands::apply::run(name, &mut store, &input_theme);
         }
         Commands::Config => {}
     }

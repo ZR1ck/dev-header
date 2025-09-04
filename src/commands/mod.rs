@@ -46,8 +46,6 @@ pub enum Commands {
     Apply {
         /// Header name
         name: String,
-        /// Placeholder values
-        values: Vec<String>,
     },
     #[command(group(ArgGroup::new("edit_options").required(true).args(&["border", "fields", "name", "spacing"])))]
     /// Edit an existing header
