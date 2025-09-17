@@ -49,7 +49,7 @@ pub fn run(
             let top = border_input("Top", input_theme);
             let right = border_input("Right", input_theme);
             let bottom = border_input("Bottom", input_theme);
-            if left.is_some() || top.is_some() || right.is_some() || left.is_some() {
+            if left.is_some() || top.is_some() || right.is_some() || bottom.is_some() {
                 template.border = Some(Border {
                     left,
                     top,
